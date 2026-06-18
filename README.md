@@ -123,7 +123,7 @@ Performed using:
 <p align="center">
 <img src="results/boxplot.png" width="600">
 </p>
-Initial quality control via sample-wide boxplots confirmed highly uniform data distributions. The median expression lines across all profiles align perfectly at a $\log_2$ baseline scale of approximately 5.5. This structural consistency demonstrates that systemic batch effects are absent, confirming the data is ready for downstream linear modeling.
+Initial quality control via sample-wide boxplots confirmed highly uniform data distributions. The median expression lines across all profiles align perfectly at a log2 baseline scale of approximately 5.5. This structural consistency demonstrates that systemic batch effects are absent, confirming the data is ready for downstream linear modeling.
 
 ## Volcano Plot
 
