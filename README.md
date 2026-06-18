@@ -1,8 +1,8 @@
-# Transcriptomic Analysis of HIV Controllers vs cART-treated Patients
-
 [![R Version](https://img.shields.io/badge/R-v4.5.2-blue.svg)](https://www.r-project.org/)
 [![Bioconductor](https://img.shields.io/badge/Bioconductor-v3.18-green.svg)](https://bioconductor.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+# Transcriptomic Analysis of HIV Controllers vs cART-treated Patients
 
 Transcriptomic analysis to identify differences in gene expression regulation between **HIV Controllers** and individuals with **chronic HIV infection receiving combination antiretroviral therapy (cART)** using public gene expression data.
 
