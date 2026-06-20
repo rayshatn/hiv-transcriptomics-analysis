@@ -59,7 +59,7 @@ Gene expression data were downloaded from GEO using GEOquery
 gset <- getGEO("GSE108296", GSEMatrix = TRUE, AnnotGPL = TRUE)[[1]]
 ```
 
-### 2. Preprocessing
+### 2. Preprocessing & Grouping
 - Expression matrix extraction
 - Log2 transformation
 - Metadata processing
@@ -67,7 +67,7 @@ gset <- getGEO("GSE108296", GSEMatrix = TRUE, AnnotGPL = TRUE)[[1]]
   - Controller
   - cART
 
-### 3. Differential Expression Analysis
+### 3. Differential Expression Analysis & Visualization
 Performed using:
 
 - limma
@@ -80,6 +80,14 @@ Filtering criteria:
 Adjusted p-value < 0.05
 |log2 Fold Change| ≥ 1
 ```
+
+Generated figures include:
+
+- Boxplot
+- Density Plot
+- UMAP
+- Volcano Plot
+- Heatmap (Top 50 DEGs)
 
 ### 4. Gene Annotation
 Illumina probe IDs were converted into official gene symbols using:
@@ -206,7 +214,7 @@ Additionally, enrichment in mucosal immune response may reflect the importance o
 KEGG pathway enrichment analysis identified several pathways related to innate immunity and host defense mechanisms.
 
 <p align="center">
-<img src="results/dotplot kegg.png" width="800">
+<img src="results/dotplot kegg.png" width="600">
 </p>
 
 The most enriched pathways included:
@@ -235,6 +243,36 @@ The enrichment of hematopoietic cell lineage suggests possible differences in im
 Taken together, KEGG enrichment results indicate that the transcriptomic differences observed between HIV Controllers and cART-treated individuals are strongly associated with innate immune activation, inflammatory regulation, and host defense pathways.
 
 These findings support the hypothesis that successful HIV control is influenced not only by viral suppression but also by more effective coordination of immune responses.
+
+---
+# How to Run
+
+Clone repository:
+
+```bash
+git clone https://github.com/rayshatn/hiv-transcriptomics-analysis.git
+```
+
+Open:
+
+```text
+script_GSE108296.R
+```
+
+Run in:
+
+```text
+RStudio
+```
+
+---
+
+# Future Improvements
+
+- Integrate RNA-seq datasets
+- Machine learning classification
+- Network analysis
+- Immune profiling
 
 ---
 
