@@ -12,7 +12,7 @@ Transcriptomic analysis to identify differences in gene expression regulation be
 
 Human Immunodeficiency Virus (HIV) infection causes changes in host cellular gene regulation and immune responses. Although combination antiretroviral therapy (cART) effectively suppresses viral replication, it does not completely eliminate latent reservoirs or fully restore immune function.
 
-A small group of individuals known as **HIV Controllers** can naturally maintain very low viral loads without antiretroviral treatment.
+A small group of individuals known as HIV Controllers can naturally maintain very low viral loads without antiretroviral treatment.
 
 This project aims to explore transcriptomic differences between these groups to identify genes and biological pathways potentially involved in natural HIV suppression.
 
@@ -39,6 +39,7 @@ This project aims to explore transcriptomic differences between these groups to 
 | Platform | Illumina HumanHT-12 V4.0 |
 | Organism | *Homo sapiens* |
 | Data Type | Microarray Expression Data |
+| Sample Count | 80 Total Samples (53 Controllers, 27 cART) |
 
 ---
 
@@ -150,6 +151,8 @@ Adjusted p-value < 0.05
 ```
 
 Genes with positive logFC values represent transcripts with relatively higher expression in the **Controller group**, whereas negative logFC values indicate lower expression compared with the **cART group**.
+
+This analysis successfully identified a total of 330 significant DEGs, consisting of 164 upregulated genes (higher expression in Controllers) and 166 downregulated genes compared with cART.
 
 Volcano plot visualization demonstrated clear separation between significant and non-significant genes.
 
