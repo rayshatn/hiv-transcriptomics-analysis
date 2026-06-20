@@ -53,9 +53,10 @@ This project aims to explore transcriptomic differences between these groups to 
 ## Methods
 
 ### 1. Data Acquisition
-Gene expression data were downloaded from GEO using:
-
-- GEOquery
+Gene expression data were downloaded from GEO using GEOquery
+```text
+gset <- getGEO("GSE108296", GSEMatrix = TRUE, AnnotGPL = TRUE)[[1]]
+```
 
 ### 2. Preprocessing
 - Expression matrix extraction
@@ -79,21 +80,20 @@ Adjusted p-value < 0.05
 |log2 Fold Change| ≥ 1
 ```
 
-### 4. Visualization
-Generated outputs:
-
-- Boxplot
-- Density Plot
-- UMAP
-- Volcano Plot
-- Heatmap (Top 50 DEGs)
+### 4. Gene Annotation
+Illumina probe IDs were converted into official gene symbols using:
+`illuminaHumanv4.db`
 
 ### 5. Functional Enrichment
-Performed using:
+Biological interpretation was performed using:
 
-- clusterProfiler
 - Gene Ontology (GO)
 - KEGG Pathway
+
+Packages:
+
+`clusterProfiler`
+`org.Hs.eg.db`
 
 ---
 
@@ -118,73 +118,120 @@ Performed using:
 
 # Key Findings and Analysis
 
-## Sample Distribution Validation
+## Validation of Sample Distribution
+
+Prior to downstream analysis, expression profiles were evaluated to assess data quality and ensure comparability across samples.
 
 <p align="center">
 <img src="results/boxplot.png" width="600">
 </p>
-Initial quality control via sample-wide boxplots confirmed highly uniform data distributions. The median expression lines across all profiles align perfectly at a log2 baseline scale of approximately 5.5. This structural consistency demonstrates that systemic batch effects are absent, confirming the data is ready for downstream linear modeling.
+Expression distribution was examined using boxplot visualization, which showed relatively consistent median expression values and comparable interquartile ranges among all samples. No major deviations or extreme outliers were observed across groups.
 
-## Volcano Plot
-
-Shows significantly upregulated and downregulated genes.
+This result suggests that the preprocessing and normalization procedures successfully reduced technical variation while preserving biological differences.
 
 <p align="center">
-<img src="results/volcano plot.png" width="800">
+<img src="results/umap.png" width="600">
 </p>
-Using an expression cutoff of |log2 Fold Change| > 1 and an FDR-adjusted p-value < 0.05, significant transcripts were isolated and visualized using a volcano plot.
-  - UP-regulated features (Red) represent biomarkers significantly elevated in target patient groups.
-  - DOWN-regulated features (Blue) represent strongly suppressed genetic pathways.
-  - Background stable features are colored gray, separating real biological signal from experimental noise.
-  
----
+In addition, dimensionality reduction using UMAP was performed to evaluate global transcriptomic similarity among samples. Samples with similar expression profiles tended to cluster together, indicating that expression patterns were not randomly distributed.
 
-## Heatmap (Top 50 Differentially Expressed Genes)
+The observed clustering pattern supports the assumption that biological variation contributes more strongly to transcriptomic differences than technical noise.
 
-Visualization of expression patterns across samples.
+Overall, quality assessment indicated that the dataset was suitable for differential expression analysis.
+
+## Differential Gene Expression (DEG) Analysis
+
+Differential gene expression analysis was performed to identify genes exhibiting statistically significant expression differences between **HIV Controllers** and **cART-treated individuals**.
+
+The analysis employed the **limma** framework using a linear modeling approach with empirical Bayes moderation to improve variance estimation across genes. Differential expression was defined using the following criteria:
+
+```text
+Adjusted p-value < 0.05
+|log2 Fold Change| ≥ 1
+```
+
+Genes with positive logFC values represent transcripts with relatively higher expression in the **Controller group**, whereas negative logFC values indicate lower expression compared with the **cART group**.
+
+Volcano plot visualization demonstrated clear separation between significant and non-significant genes.
 
 <p align="center">
-<img src="results/heatmap.png" width="800">
+<img src="results/volcano plot.png" width="600">
 </p>
-Hierarchical clustering of the Top 50 highly significant DEGs yielded perfect classification boundaries.
--The Controller cohort displays a uniform blocks of expression, showing strong down-regulated (blue) and up-regulated (red) clusters.
--The cART cohort exhibits a precise reciprocal pattern, demonstrating that this 50-gene panel serves as an exceptionally accurate diagnostic biomarker panel.
 
----
+- Upregulated genes (red) → significantly increased expression.
+- Downregulated genes (blue) → significantly decreased expression.
+- Non-significant genes (gray) → expression changes below statistical thresholds.
 
-## Gene Ontology Enrichment
+The distribution pattern observed in the volcano plot indicates that although most genes remained stable between groups, a subset displayed strong transcriptional differences, suggesting biological processes specifically associated with HIV control mechanisms.
 
-Top enriched biological processes.
+Heatmap visualization of the Top 50 DEGs further demonstrated coordinated expression patterns across samples. Samples belonging to the same clinical group tended to cluster together, indicating that DEG profiles captured biologically meaningful differences rather than random variation.
 
 <p align="center">
-<img src="results/dotplot go.png" width="800">
+<img src="results/heatmap.png" width="600">
 </p>
-Highly enriched terms visualized via a dotplot are heavily localized around functional immune networks, including mucosal immune responses, leukocyte migration, and acute inflammatory responses.
 
----
+- Columns represent individual samples
+- Rows represent genes
+- Color intensity represents relative gene expression levels: (Red → relatively higher expression), (Blue → relatively lower expression), (Yellow/Intermediate tones → moderate expression)
 
-## KEGG Pathway Enrichment
+Expression values were standardized by row (row scaling), allowing comparison of relative expression patterns across samples for each gene.
 
-Biological pathway enrichment analysis.
+Hierarchical clustering revealed separation of samples according to biological condition, indicating that transcriptional profiles differ between Controller and cART groups.
+
+
+## Functional Enrichment Analysis
+
+To investigate the biological significance of DEG profiles, enrichment analysis was performed using Gene Ontology (GO) and KEGG pathway analysis.
+
+#### Gene Ontology (GO)
+
+The Gene Ontology (GO) enrichment analysis revealed that the differentially expressed genes (DEGs) identified between HIV Controllers and cART-treated individuals were significantly associated with immune-related biological processes.
+
+<p align="center">
+<img src="results/dotplot go.png" width="600">
+</p>
+
+The enrichment dotplot showed that chemotaxis and leukocyte migration had among the highest gene ratios and statistical significance, indicating that a substantial proportion of DEGs participate in immune cell movement and recruitment.
+
+This finding suggests that one of the major biological distinctions between HIV Controllers and cART-treated patients may involve differences in how immune cells are mobilized and coordinated during immune surveillance.
+
+Enrichment of acute inflammatory response and cell killing further supports the involvement of activated innate immune mechanisms. These processes are critical for eliminating infected cells and controlling viral dissemination.
+
+Additionally, enrichment in mucosal immune response may reflect the importance of maintaining immune integrity at mucosal barriers, which are recognized as key sites of HIV pathogenesis and immune dysfunction.
+
+#### KEGG Pathway Analysis
+
+KEGG pathway enrichment analysis identified several pathways related to innate immunity and host defense mechanisms.
 
 <p align="center">
 <img src="results/dotplot kegg.png" width="800">
 </p>
-Exactly 5 highly specific pathways survived the strict false-discovery rate thresholds, forming a connected biological narrative:
--Phagocytosis & Neutrophil extracellular trap (NET) formation (Active innate immune cell defense mechanisms)
--Staphylococcus aureus infection & Leishmaniasis (Host-pathogen interaction interface)
--Hematopoietic cell lineage (Upstream immune cell differentiation)
 
----
+The most enriched pathways included:
 
-## Output
+- Phagocytosis
+- Staphylococcus aureus infection
+- Neutrophil extracellular trap formation (NET formation)
+- Hematopoietic cell lineage
+- Leishmaniasis
 
-Generated files:
+Among these pathways, Phagocytosis appeared as one of the strongest enrichment signals.
 
-- Differentially Expressed Genes (CSV)
-- GO Enrichment Results
-- KEGG Enrichment Results
-- Figures and Visualizations
+Phagocytosis is a key mechanism of innate immunity in which immune cells recognize, engulf, and eliminate pathogens or infected cells. Enrichment of this pathway suggests that transcriptional differences between Controller and cART groups may involve altered cellular clearance mechanisms.
+
+The enrichment of Neutrophil Extracellular Trap (NET) formation indicates potential differences in neutrophil activation and extracellular antimicrobial defense. NET formation has previously been linked to inflammatory regulation and chronic immune activation during viral infections.
+
+Although pathways such as Staphylococcus aureus infection and Leishmaniasis appear pathogen-specific, enrichment analysis does not imply co-infection. Instead, these pathways represent shared host immune-response mechanisms involving:
+
+cytokine signaling,
+phagocytic activation,
+leukocyte recruitment,
+antimicrobial defense.
+
+The enrichment of hematopoietic cell lineage suggests possible differences in immune-cell differentiation and maintenance between the two groups.
+
+Taken together, KEGG enrichment results indicate that the transcriptomic differences observed between HIV Controllers and cART-treated individuals are strongly associated with innate immune activation, inflammatory regulation, and host defense pathways.
+
+These findings support the hypothesis that successful HIV control is influenced not only by viral suppression but also by more effective coordination of immune responses.
 
 ---
 
